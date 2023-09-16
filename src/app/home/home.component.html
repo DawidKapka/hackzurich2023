@@ -1,9 +1,14 @@
-<div class="trip-input">
-  <form>
-    <input [(ngModel)]="pointA" name="pointA">
-    <input [(ngModel)]="pointB" name="pointB">
-    <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" type="datetime-local">
-    <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal ?? '')">Check Connections</button>
-  </form>
+<div class="loading" *ngIf="loading" class="loading">
+  <article aria-busy="true"></article>
 </div>
-<div #googleMaps id="map"></div>
+<div class="content">
+  <div class="trip-input">
+    <form>
+      <input type="text" [(ngModel)]="pointA" class="input">
+      <input [(ngModel)]="pointB" class="input">
+      <input [(ngModel)]="dateTimeLocal" class="input" type="datetime-local">
+      <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal ?? '')">Check Connections</button>
+    </form>
+  </div>
+  <div #googleMaps id="map"></div>
+</div>

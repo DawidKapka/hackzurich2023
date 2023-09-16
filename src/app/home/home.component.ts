@@ -12,16 +12,20 @@ export class HomeComponent implements AfterViewInit{
   public pointA: string | undefined;
   public pointB: string | undefined;
   public dateTimeLocal: string = format(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
+  public loading: boolean = false
   private map: google.maps.Map | undefined;
   private position: GeolocationPosition | undefined;
   private directionsService: google.maps.DirectionsService | undefined;
+  private directionsRenderer: google.maps.DirectionsRenderer | undefined;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
   ngAfterViewInit() {
+    this.loading = true;
     this.initGoogleMaps().then(() => {
       setTimeout(() => {
         this.initDirections()
+        this.loading = false
       }, 1000)
     })
 
@@ -48,28 +52,23 @@ export class HomeComponent implements AfterViewInit{
 
   private initDirections() {
     this.directionsService = new google.maps.DirectionsService()
-    const directionsRenderer: google.maps.DirectionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(this.map!)
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.directionsRenderer.setMap(this.map!)
   }
 
   public calculateRoute(pointA: string, pointB: string, datetime: string) {
-    console.log(pointA);
-    console.log(pointB);
-    console.log(datetime);
-    return new Promise<google.maps.DirectionsResult | null>((resolve) => {
-      const request: google.maps.DirectionsRequest = {
+    const request: google.maps.DirectionsRequest = {
         origin: pointA,
         destination: pointB,
         travelMode: google.maps.TravelMode.TRANSIT,
         transitOptions: {
           departureTime: new Date(datetime)
         }
+    }
+    this.directionsService!.route(request, (response, status) => {
+      if (status === DirectionsStatus.OK && response) {
+        this.directionsRenderer?.setDirections(response)
       }
-      this.directionsService!.route(request, (response, status) => {
-        if (status === DirectionsStatus.OK) {
-          resolve(response)
-        }
-      })
     })
   }
 }

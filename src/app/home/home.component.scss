@@ -8,3 +8,17 @@
   width: 100vw;
   height: 200px;
 }
+
+.loading {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.trip-input {
+  .input {
+    margin: 0;
+  }
+}
