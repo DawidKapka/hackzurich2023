@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  httpd:
+    container_name: hack23
+    ports:
+      - '82:80'
+    volumes:
+      - './dist:/usr/local/apache2/htdocs/'
+    network_mode: global
+    image: 'httpd:alpine'
