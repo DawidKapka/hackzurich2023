@@ -148,6 +148,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
   goBack() {
     this.state = 'NO_ROUTE';
     this.dropdownHidden = false;
+    this.cyclingStatistics = undefined;
+    this.carStatistics = undefined;
+    this.transitStatistics = undefined;
   }
 
   setOriginToCurrent() {

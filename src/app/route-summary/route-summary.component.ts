@@ -27,8 +27,8 @@ export class RouteSummaryComponent implements AfterViewInit{
     const percentageCondition = this.transitTimeDifference >= this.drivingStatistics!.durationMinutes!.value
     const twoHourCondition = this.transitTimeDifference / 3600 > 2
     const tenKilometerCondition = this.drivingStatistics!.distance >= 10000
-    // true if transit time increases over 50% or more than 2 hours and distance is more than 10km
-    return (percentageCondition || twoHourCondition) && tenKilometerCondition
+    const fiveHoursCondition = (this.transitStatistics!.durationMinutes.value / 3600) < 5;
+    return (percentageCondition || twoHourCondition) && tenKilometerCondition && fiveHoursCondition
   }
 
   ngAfterViewInit() {

@@ -39,6 +39,7 @@
         <p>Consider taking Public Transport for this journey.</p>
         <p *ngIf="transitTimeDifference > 0">It might delay your arrival by approx. <span class="negative">{{ transitTimeDifferenceText }}</span>, however...</p>
         <p *ngIf="transitTimeDifference <= 0">It will save you approx. <span class="positive">{{ transitTimeDifferenceText.substring(1) }}</span>.</p>
+        <p *ngIf="(transitStatistics!.durationMinutes.value / 3600) >= 5">You can spend the extra time on working, relaxing or sleeping.</p>
         <p>It will also decrease your CO2 Emissions by <span class="positive">{{(transitCo2Difference * -1).toFixed(2)}}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
         <p *ngIf="transitPriceDifference < 0">and save you approx. <span class="positive">CHF {{ (transitPriceDifference * -1).toFixed(2) }}</span>.</p>
         <p *ngIf="drivingStatistics!.distance <= 5000">Or even better, since your journey is only <span class="positive">{{(drivingStatistics!.distance / 1000).toFixed(1)}} km</span>
