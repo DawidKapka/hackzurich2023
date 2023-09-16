@@ -30,8 +30,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
   private drivingDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
   private transitDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
 
-  private priceCar = 0;
-
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
   ngOnInit() {
@@ -111,13 +109,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
                 }).legs[0];
 
                 if (mode === TravelMode.DRIVING) {
-                  this.priceCar = Math.round((leg.distance!.value / 1000) * 0.8)
                   this.drivingDirectionsRenderer?.setDirections(response)
                   this.from = response.routes[0].legs[0].start_address
                   this.to = response.routes[0].legs[0].end_address
                   this.carStatistics = {
                     durationMinutes: leg.duration!,
-                    price: this.priceCar,
+                    price: Math.round((leg.distance!.value / 1000) * 0.75 * 100)/100,
                     kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100) / 100,
                     distance: leg.distance!.value
                   }
@@ -126,7 +123,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
                   this.transitDirectionsRenderer?.setDirections(response);
                   this.transitStatistics = {
                     durationMinutes: leg.duration!,
-                    price: Math.round((this.priceCar > 10 ? this.priceCar * 0.8 : 5.40)*100)/100,
+                    price: Math.round((leg.distance!.value / 1000) * 0.575 * 100)/100,
                     kgCo2: Math.round((leg.distance!.value / 1000) * 0.024 * 100) / 100,
                     distance: leg.distance!.value
                   }

@@ -56,7 +56,7 @@
       <p class="overview-title"><strong>Car Route</strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes!.text}}</p>
       <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emissions: {{drivingStatistics?.kgCo2}} kg</p>
-      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: CHF {{drivingStatistics!.price!.toFixed()}}
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: CHF {{drivingStatistics!.price!.toFixed(2)}}
       </p>
     </div>
     <div class="transit">
