@@ -30,7 +30,7 @@
       display: flex;
       justify-content: space-around;
       flex-direction: column;
-      margin: .5em 0;
+      margin: .5em 1em .5em 0;
 
       .crosshair {
         margin: 0 12px 0 12px;
@@ -39,8 +39,8 @@
   }
 
   .input, .button {
-    margin: .5em 0;
-    width: 100%;
+    margin: .5em 1em;
+    width: calc(100% - 2em);
   }
 
   .show {
@@ -82,6 +82,7 @@
   .loading-article {
     margin-top: 50vh;
     transform: translateY(-50%);
+    box-shadow: none;
   }
 
   .loading-text {
