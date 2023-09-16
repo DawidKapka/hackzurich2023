@@ -1,14 +1,20 @@
 <div class="loading" *ngIf="loading" class="loading">
-  <article aria-busy="true"></article>
+  <article aria-busy="true" class="loading-article"></article>
+  <p class="loading-text">Loading...</p>
 </div>
 <div class="content">
-  <div class="trip-input">
+  <div class="trip-input" [ngClass]="{'hidden': dropdownHidden}">
     <form>
-      <input type="text" [(ngModel)]="pointA" class="input" name="pointA">
-      <input [(ngModel)]="pointB" class="input" name="pointB">
-      <input [(ngModel)]="dateTimeLocal" class="input" type="datetime-local" name="dateTimeLocal">
-      <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal ?? '')">Check Connections</button>
+      <input type="text" [(ngModel)]="pointA" name="pointA" class="input">
+      <input [(ngModel)]="pointB" name="pointB" class="input">
+      <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" class="input" type="datetime-local">
+      <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal)" class="button">Check Connections</button>
+      <div class="show" *ngIf="state === 'ROUTE_FOUND'">
+        <div class="show-inner" (click)="toggleDropdownHidden()">
+          <p class="show-inner-text">{{ dropdownHidden ? 'Show menu' : 'Hide menu' }}</p>
+        </div>
+      </div>
     </form>
   </div>
-  <div #googleMaps id="map"></div>
+  <div #googleMaps id="map" [ngClass]="{'map-full': dropdownHidden}"></div>
 </div>

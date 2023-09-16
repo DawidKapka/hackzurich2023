@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {format, intervalToDuration} from "date-fns";
 import {Statistics} from "../statistics";
 import DirectionsStatus = google.maps.DirectionsStatus;
@@ -9,23 +9,29 @@ import TravelMode = google.maps.TravelMode;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements AfterViewInit, OnInit {
 
   public pointA: string | undefined;
   public pointB: string | undefined;
   public dateTimeLocal: string = format(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
   public loading: boolean = false
+  public transitStatistics: Statistics | undefined
+  public carStatistics: Statistics | undefined
+  public state: 'NO_ROUTE' | 'ROUTE_FOUND' = 'NO_ROUTE'
+  public dropdownHidden: boolean = false;
   private map: google.maps.Map | undefined;
   private position: GeolocationPosition | undefined;
   private directionsService: google.maps.DirectionsService | undefined;
-  private directionsRenderer: google.maps.DirectionsRenderer | undefined;
-  public transitStatistics: Statistics | undefined
-  public carStatistics: Statistics | undefined
+  private drivingDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
+  private transitDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
+  ngOnInit() {
+    this.loading = true
+  }
+
   ngAfterViewInit() {
-    this.loading = true;
     this.initGoogleMaps().then(() => {
       setTimeout(() => {
         this.initDirections()
@@ -56,8 +62,22 @@ export class HomeComponent implements AfterViewInit {
 
   private initDirections() {
     this.directionsService = new google.maps.DirectionsService()
-    this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.directionsRenderer.setMap(this.map!)
+    this.drivingDirectionsRenderer = new google.maps.DirectionsRenderer();
+    this.transitDirectionsRenderer = new google.maps.DirectionsRenderer();
+    this.drivingDirectionsRenderer.setMap(this.map!)
+    this.drivingDirectionsRenderer.setOptions({
+      polylineOptions: {
+        strokeColor: '#c62828'
+      },
+      suppressInfoWindows: true
+    })
+    this.transitDirectionsRenderer.setMap(this.map!)
+    this.transitDirectionsRenderer.setOptions({
+      polylineOptions: {
+        strokeColor: '#388e3c'
+      },
+      suppressInfoWindows: true
+    })
   }
 
   public calculateRoute(pointA: string, pointB: string, datetime: string) {
@@ -72,10 +92,18 @@ export class HomeComponent implements AfterViewInit {
       }
       this.directionsService!.route(request, (response, status) => {
         if (status === DirectionsStatus.OK && response) {
-          const stats = this.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
-          mode === TravelMode.TRANSIT ? this.transitStatistics = stats : this.carStatistics = stats;
-          this.directionsRenderer?.setDirections(response)
-          //TODO; https://github.com/explooosion/Agm-Direction/issues/46 cant just call renderer twice
+          if (mode === TravelMode.DRIVING) {
+            this.drivingDirectionsRenderer?.setDirections(response)
+            const startDate = new Date(Date.now())
+            const endDate = new Date(Date.now())
+            endDate.setMinutes(endDate.getMinutes() + response.routes[0].legs[0].duration!.value)
+            this.carStatistics = this.calculateStatistics(startDate, endDate)
+          } else {
+            this.transitDirectionsRenderer?.setDirections(response);
+            this.transitStatistics = this.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
+          }
+          this.state = 'ROUTE_FOUND'
+          this.dropdownHidden = true;
         }
       })
     })
@@ -92,5 +120,9 @@ export class HomeComponent implements AfterViewInit {
       kgCo2: 0,
       price: 0
     }
+  }
+
+  toggleDropdownHidden() {
+    this.dropdownHidden = !this.dropdownHidden
   }
 }

@@ -4,9 +4,48 @@
   background: lightgray;
 }
 
+.map-full {
+  position: absolute !important;
+  top: 2.6em !important;
+  height: calc(100vh - 2.6em) !important;
+}
+
 .trip-input {
   width: 100vw;
   height: 200px;
+  animation: appear 200ms;
+  animation-fill-mode: forwards;
+
+  .input, .button {
+    margin: 0;
+    width: 100%;
+  }
+
+  .show {
+    height: 2.6em;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    z-index: 999;
+
+    .show-inner {
+      height: 100%;
+      width: 100%;
+      background: var(--primary);
+      padding: .4em;
+
+      .show-inner-text {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.hidden {
+  animation: hide 200ms;
+  animation-fill-mode: forwards;
 }
 
 .loading {
@@ -15,10 +54,35 @@
   position: absolute;
   top: 0;
   left: 0;
+  background: var(--card-background-color);
+  z-index: 999;
+
+  .loading-article {
+    margin-top: 50vh;
+    transform: translateY(-50%);
+  }
+
+  .loading-text {
+    width: 100vw;
+    text-align: center;
+    transform: translateY(-44px);
+  }
 }
 
-.trip-input {
-  .input {
-    margin: 0;
+@keyframes hide {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-200px);
+  }
+}
+
+@keyframes appear {
+  0% {
+    transform: translateY(-200px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

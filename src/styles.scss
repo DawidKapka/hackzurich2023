@@ -4,3 +4,8 @@
 body {
   margin: 0;
 }
+
+div[role="button"] {
+  background-color: transparent;
+  border: none;
+}
