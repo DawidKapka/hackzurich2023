@@ -31,6 +31,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   private transitDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
+  @ViewChild('origin') origin: ElementRef | undefined;
+  @ViewChild('destination') destination: ElementRef | undefined;
 
   ngOnInit() {
     this.loading = true
@@ -40,6 +42,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.initGoogleMaps().then(() => {
       setTimeout(() => {
         this.initDirections()
+        this.initAutocompletes()
         this.loading = false
       }, 1000)
     })
@@ -193,5 +196,18 @@ export class HomeComponent implements AfterViewInit, OnInit {
         }
       })
     })
+  }
+
+  private initAutocompletes() {
+    const originInput = this.origin!.nativeElement as HTMLInputElement
+    const destinationInput = this.destination!.nativeElement as HTMLInputElement
+    const options = {
+      fields: ["address_components", "geometry", "icon", "name"],
+      strictBounds: false,
+    };
+    const originAutocomplete = new google.maps.places.Autocomplete(originInput, options)
+    const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options)
+    originAutocomplete.setFields(["place_id", "geometry", "name"]);
+    destinationAutocomplete.setFields(["place_id", "geometry", "name"]);
   }
 }

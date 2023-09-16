@@ -9,14 +9,14 @@
   <div class="trip-input" [ngClass]="{'hidden': dropdownHidden}">
     <form>
       <div class="from">
-        <input type="text" [(ngModel)]="pointA" name="pointA" class="input" placeholder="Origin" [disabled]="originIsCurrent">
+        <input type="text" [(ngModel)]="pointA" name="pointA" class="input" placeholder="Origin" #origin [disabled]="originIsCurrent">
         <div class="icon">
           <i-feather name="crosshair" class="crosshair" (click)="setOriginToCurrent()" *ngIf="!originIsCurrent"></i-feather>
           <i-feather name="x" class="crosshair" (click)="resetOrigin()" *ngIf="originIsCurrent"></i-feather>
         </div>
       </div>
       <div class="to">
-        <input [(ngModel)]="pointB" name="pointB" class="input" placeholder="Destination" [disabled]="destinationIsCurrent">
+        <input [(ngModel)]="pointB" name="pointB" class="input" placeholder="Destination" #destination [disabled]="destinationIsCurrent">
         <div class="icon">
           <i-feather name="crosshair" class="crosshair" (click)="setDestinationToCurrent()" *ngIf="!destinationIsCurrent"></i-feather>
           <i-feather name="x" class="crosshair" (click)="resetDestination()" *ngIf="destinationIsCurrent"></i-feather>
