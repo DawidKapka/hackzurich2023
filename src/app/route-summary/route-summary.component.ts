@@ -13,8 +13,15 @@ export class RouteSummaryComponent implements AfterViewInit{
   @Input('drivingStatistics') drivingStatistics: Statistics | undefined;
   @Input('transitStatistics') transitStatistics: Statistics | undefined;
 
+  public transitCo2Difference: number = 0;
+  public transitPriceDifference: number = 0;
+
   ngAfterViewInit() {
-    console.log(this.drivingStatistics);
-    console.log(this.transitStatistics);
+    this.createTransitToDrivingDifference()
+  }
+
+  private createTransitToDrivingDifference() {
+    this.transitCo2Difference = this.transitStatistics!.kgCo2 - this.drivingStatistics!.kgCo2
+    this.transitPriceDifference = this.transitStatistics!.price - this.drivingStatistics!.price
   }
 }

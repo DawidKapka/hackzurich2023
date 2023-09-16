@@ -61,3 +61,20 @@
     }
   }
 }
+
+.positive, .negative, .neutral {
+  font-size: 12px;
+  margin-left: 1em;
+}
+
+.positive {
+  color: var(--ins-color);
+}
+
+.negative {
+  color: var(--del-color);
+}
+
+.neutral {
+  color: var(--mark-background-color);
+}

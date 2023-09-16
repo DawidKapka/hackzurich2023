@@ -28,13 +28,15 @@
       <p class="overview-title"><strong>Car Route</strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes}}</p>
       <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emission: {{drivingStatistics?.kgCo2}}kg</p>
-      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{drivingStatistics?.price}}CHF</p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{drivingStatistics!.price!.toFixed}}CHF</p>
     </div>
     <div class="transit">
       <p class="overview-title"><strong>Public Transport Route</strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{transitStatistics?.durationMinutes}}</p>
-      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emission: {{transitStatistics?.kgCo2}}kg</p>
-      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{transitStatistics?.price}}CHF</p>
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emission: {{transitStatistics?.kgCo2}}kg
+        <span [ngClass]="{'positive': transitCo2Difference < 0, 'neutral': transitCo2Difference === 0, 'negative': transitCo2Difference > 0}">{{ transitCo2Difference }}kg</span></p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{transitStatistics!.price!.toFixed(2)}}CHF
+        <span [ngClass]="{'positive': transitPriceDifference < 0, 'neutral': transitPriceDifference === 0, 'negative': transitPriceDifference > 0}">{{ transitPriceDifference }}CHF</span></p>
     </div>
   </div>
 </div>
