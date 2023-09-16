@@ -1,17 +1,40 @@
 <div class="summary">
   <div class="header">
-    <h5 class="header-title">{{from}} - {{to}}</h5>
+    <div class="header-from">
+      <div class="from">
+        <div class="text">
+          <label class="label" for="from">Origin</label>
+          <span id="from">{{from}}</span>
+        </div>
+        <div class="icon">
+          <i-feather name="arrow-right"></i-feather>
+        </div>
+      </div>
+    </div>
+    <div class="header-to">
+      <div class="to">
+        <div class="text">
+          <label class="label" for="to">Destination</label>
+          <span id="to">{{to}}</span>
+        </div>
+        <div class="icon">
+          <i-feather name="arrow-left"></i-feather>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="car">
-    <p><strong>Car Route</strong></p>
-    <p>Duration: {{drivingStatistics?.durationMinutes}} min</p>
-    <p>CO2 Emission: {{drivingStatistics?.kgCo2}}kg</p>
-    <p>Estimated Cost: {{drivingStatistics?.price}}CHF</p>
-  </div>
-  <div class="transit">
-    <p><strong>Public Transport Route</strong></p>
-    <p>Duration: {{transitStatistics?.durationMinutes}} min</p>
-    <p>CO2 Emission: {{transitStatistics?.kgCo2}}kg</p>
-    <p>Estimated Cost: {{transitStatistics?.price}}CHF</p>
+  <div class="overview-wrapper">
+    <div class="car">
+      <p class="overview-title"><strong>Car Route</strong></p>
+      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes}}</p>
+      <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emission: {{drivingStatistics?.kgCo2}}kg</p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{drivingStatistics?.price}}CHF</p>
+    </div>
+    <div class="transit">
+      <p class="overview-title"><strong>Public Transport Route</strong></p>
+      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{transitStatistics?.durationMinutes}}</p>
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emission: {{transitStatistics?.kgCo2}}kg</p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{transitStatistics?.price}}CHF</p>
+    </div>
   </div>
 </div>

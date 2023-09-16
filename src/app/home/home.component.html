@@ -5,9 +5,9 @@
 <div class="content">
   <div class="trip-input" [ngClass]="{'hidden': dropdownHidden}">
     <form>
-      <input type="text" [(ngModel)]="pointA" name="pointA" class="input">
-      <input [(ngModel)]="pointB" name="pointB" class="input">
-      <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" class="input" type="datetime-local">
+      <input type="text" [(ngModel)]="pointA" name="pointA" class="input" placeholder="Origin">
+      <input [(ngModel)]="pointB" name="pointB" class="input" placeholder="Destination">
+      <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" class="input" type="datetime-local" placeholder="Departure Date">
       <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal)" class="button">Check Connections</button>
     </form>
   </div>

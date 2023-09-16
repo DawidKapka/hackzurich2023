@@ -21,7 +21,9 @@
     "@angular/router": "~16.2.2",
     "@picocss/pico": "^1.5.10",
     "@types/googlemaps": "^3.43.3",
+    "angular-feather": "^6.5.0",
     "date-fns": "^2.30.0",
+    "feather-icons": "^4.29.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

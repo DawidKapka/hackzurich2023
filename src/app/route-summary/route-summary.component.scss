@@ -2,7 +2,7 @@
   position: absolute;
   bottom: 0;
   width: 100vw;
-  height: 40vh;
+  height: 50vh;
   background: var(--card-background-color);
   border-radius: 12px 12px 0 0;
   box-shadow: 2px 2px 2px rgba(0,0,0,.5);
@@ -12,9 +12,52 @@
     width: 100%;
     padding: 1em;
 
-    .header-title {
-      text-align: center;
-      width: 100%;
+    .header-from, .header-to {
+      .from {
+        margin-bottom: 1em;
+      }
+      .from, .to {
+        padding: 1em;
+        border: 1px solid rgba(255,255,255,.3);
+        border-radius: 6px;
+        display: flex;
+
+        .text {
+          width: 90%;
+
+          .label {
+            font-size: 12px;
+            font-style: italic;
+          }
+        }
+
+        .icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+        }
+      }
+    }
+  }
+
+  .overview-wrapper {
+    margin: 1em;
+
+    .overview-title {
+      margin-top: 2em;
+      border-bottom: 1px solid rgba(255,255,255,.3);
+      padding-bottom: .2em;
+    }
+
+    .overview {
+      margin-bottom: .5em;
+    }
+
+    .small-icon {
+      height: 16px;
+      width: 16px;
+      transform: translateY(-2px);
+      margin-right: .5em;
     }
   }
 }

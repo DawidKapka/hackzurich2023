@@ -8,6 +8,7 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { HomeComponent } from './home/home.component';
 import { RouteSummaryComponent } from './route-summary/route-summary.component';
+import {IconsModule} from "./icons/icons.module";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { RouteSummaryComponent } from './route-summary/route-summary.component';
     AppRoutingModule,
     GoogleMapsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    IconsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
