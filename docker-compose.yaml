@@ -5,6 +5,6 @@ services:
     ports:
       - '82:80'
     volumes:
-      - './dist:/usr/local/apache2/htdocs/'
+      - './dist/hackzurich2023:/usr/local/apache2/htdocs/'
     network_mode: global
     image: 'httpd:alpine'
