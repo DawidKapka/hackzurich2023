@@ -1,6 +1,6 @@
 #map {
   width: 100vw;
-  height: calc(100vh - 200px - 2em);
+  height: calc(100vh - 200px - 4.5em);
   background: lightgray;
 }
 
@@ -12,10 +12,14 @@
 
 .trip-input {
   width: 100vw;
-  height: calc(200px + 2em);
+  height: calc(200px + 4.5em);
   animation: appear 200ms;
   animation-fill-mode: forwards;
   border-radius: 0 0 12px 12px;
+
+  .from {
+    margin-top: .5em;
+  }
 
   .from, .to {
     display: flex;
@@ -26,6 +30,7 @@
       display: flex;
       justify-content: space-around;
       flex-direction: column;
+      margin: .5em 0;
 
       .crosshair {
         margin: 0 12px 0 12px;
@@ -34,12 +39,8 @@
   }
 
   .input, .button {
-    margin: 0;
+    margin: .5em 0;
     width: 100%;
-  }
-
-  .button {
-    margin: 1em 0;
   }
 
   .show {
