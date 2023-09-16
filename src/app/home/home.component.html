@@ -27,5 +27,5 @@
     </form>
   </div>
   <div #googleMaps id="map" [ngClass]="{'map-full': state === 'ROUTE_FOUND'}"></div>
-  <app-route-summary *ngIf="state === 'ROUTE_FOUND'" [from]="from" [to]="to" [drivingStatistics]="carStatistics" [transitStatistics]="transitStatistics"></app-route-summary>
+  <app-route-summary *ngIf="state === 'ROUTE_FOUND'" [from]="from" [to]="to" [drivingStatistics]="carStatistics" [transitStatistics]="transitStatistics" [cyclingStatistics]="cyclingStatistics"></app-route-summary>
 </div>

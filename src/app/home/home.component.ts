@@ -17,6 +17,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   public loading: boolean = false
   public transitStatistics: Statistics | undefined
   public carStatistics: Statistics | undefined
+  public cyclingStatistics: Statistics | undefined
   public state: 'NO_ROUTE' | 'ROUTE_FOUND' = 'NO_ROUTE'
   public dropdownHidden: boolean = false;
   public from: string = ''
@@ -28,6 +29,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   private directionsService: google.maps.DirectionsService | undefined;
   private drivingDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
   private transitDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
+
   private priceCar = 0;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
@@ -88,7 +90,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   public async calculateRoute(pointA: string, pointB: string, datetime: string) {
     if (this.validatePoints()) {
         await new Promise<void>(resolve => {
-          [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
+          [TravelMode.DRIVING, TravelMode.TRANSIT].forEach((mode) => {
             const request: google.maps.DirectionsRequest = {
               origin: pointA === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointA,
               destination: pointB === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointB,
@@ -97,7 +99,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
                 departureTime: new Date(datetime)
               }
             }
-            this.directionsService!.route(request, (response, status) => {
+            this.directionsService!.route(request, async (response, status) => {
+              if (response!.routes[0]!.legs[0]!.distance!.value <= 5000 && mode === TravelMode.DRIVING) {
+                await this.createCyclingOption()
+              }
               if (status === DirectionsStatus.OK && response) {
                 const leg = response.routes[0].legs[0];
                 if (mode === TravelMode.DRIVING) {
@@ -108,7 +113,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
                   this.carStatistics = {
                     durationMinutes: leg.duration!,
                     price: this.priceCar,
-                    kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100 ) / 100,
+                    kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100) / 100,
                     distance: leg.distance!.value
                   }
                 } else {
@@ -157,5 +162,30 @@ export class HomeComponent implements AfterViewInit, OnInit {
   resetDestination() {
     this.pointB = ''
     this.destinationIsCurrent = false
+  }
+
+  private createCyclingOption() {
+    return new Promise<void>(resolve => {
+      const request: google.maps.DirectionsRequest = {
+        origin: this.pointA === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : this.pointA!,
+        destination: this.pointB === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : this.pointB!,
+        travelMode: TravelMode.BICYCLING,
+        transitOptions: {
+          departureTime: new Date(this.dateTimeLocal)
+        }
+      }
+      this.directionsService!.route(request, (response, status) => {
+        if (status === DirectionsStatus.OK && response) {
+          const leg = response.routes[0].legs[0];
+          this.cyclingStatistics = {
+            durationMinutes: leg.duration!,
+            price: 0,
+            kgCo2: 0,
+            distance: leg.distance!.value
+          }
+          resolve()
+        }
+      })
+    })
   }
 }

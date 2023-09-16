@@ -41,7 +41,15 @@
         <p *ngIf="transitTimeDifference <= 0">It will save you approx. <span class="positive">{{ transitTimeDifferenceText.substring(1) }}</span>.</p>
         <p>It will also decrease your CO2 Emissions by <span class="positive">{{(transitCo2Difference * -1).toFixed(2)}}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
         <p *ngIf="transitPriceDifference < 0">and save you approx. <span class="positive">{{ (transitPriceDifference * -1).toFixed(2) }}CHF</span>.</p>
+        <p *ngIf="drivingStatistics!.distance <= 5000">Or even better, since your journey is only <span class="positive">{{(drivingStatistics!.distance / 1000).toFixed(1)}}km</span>
+          , you could even consider taking a <span class="positive">Bike</span>. This would reduce both the CO2 Emissions and the cost by <span class="positive">100%</span>!</p>
       </div>
+    </div>
+    <div class="bike" *ngIf="cyclingStatistics">
+      <p class="overview-title"><strong>Alternative: <span class="positive">Biking</span></strong></p>
+      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{cyclingStatistics?.durationMinutes!.text}}</p>
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: <span class="positive">{{cyclingStatistics?.kgCo2}}kg</span></p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: <span class="positive">{{cyclingStatistics!.price!.toFixed()}}CHF</span></p>
     </div>
     <div class="car">
       <p class="overview-title"><strong>Car Route</strong></p>

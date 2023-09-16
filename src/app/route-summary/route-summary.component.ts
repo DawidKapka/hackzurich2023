@@ -14,6 +14,7 @@ export class RouteSummaryComponent implements AfterViewInit{
   @Input('to') to: string = '';
   @Input('drivingStatistics') drivingStatistics: Statistics | undefined;
   @Input('transitStatistics') transitStatistics: Statistics | undefined;
+  @Input('cyclingStatistics') cyclingStatistics: Statistics | undefined;
 
 
   public transitCo2Difference: number = 0;
