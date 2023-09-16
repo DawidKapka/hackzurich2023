@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {format, intervalToDuration} from "date-fns";
+import {format} from "date-fns";
 import {Statistics} from "../statistics";
 import DirectionsStatus = google.maps.DirectionsStatus;
 import TravelMode = google.maps.TravelMode;
@@ -94,35 +94,26 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
       this.directionsService!.route(request, (response, status) => {
         if (status === DirectionsStatus.OK && response) {
+          const leg = response.routes[0].legs[0];
           if (mode === TravelMode.DRIVING) {
             this.drivingDirectionsRenderer?.setDirections(response)
-            const startDate = new Date(Date.now())
-            const endDate = new Date(Date.now())
-            this.from = response.routes[0].legs[0].start_address
-            this.to = response.routes[0].legs[0].end_address
-            endDate.setMinutes(endDate.getMinutes() + response.routes[0].legs[0].duration!.value)
-            this.carStatistics = HomeComponent.calculateStatistics(startDate, endDate)
+            this.carStatistics = {
+              durationMinutes: leg.duration!.text,
+              price: Math.round((leg.distance!.value / 1000) * 0.8),
+              kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100 ) / 100
+            }
           } else {
             this.transitDirectionsRenderer?.setDirections(response);
-            this.transitStatistics = HomeComponent.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
+            this.transitStatistics = {
+              durationMinutes: leg.duration!.text,
+              price: -1,
+              kgCo2: Math.round((leg.distance!.value / 1000) * 0.024 * 100) / 100
+            }
           }
           this.state = 'ROUTE_FOUND'
           this.dropdownHidden = true;
         }
       })
     })
-  }
-
-  private static calculateStatistics(depDate: Date, arrDate: Date): Statistics {
-    return {
-      durationMinutes: intervalToDuration(
-        {
-          start: depDate,
-          end: arrDate
-        }
-      ).minutes!,
-      kgCo2: 0,
-      price: 0
-    }
   }
 }
