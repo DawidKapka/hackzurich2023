@@ -32,7 +32,7 @@
       <div class="car-recommendation" *ngIf="timeDifferenceTooBig">
         <p>Taking a car for this journey might be more efficient, it will save you <span class="positive">{{transitTimeDifferenceText}}</span>.</p>
         <p>However, keep in mind that it will increase your CO2 Emissions by <span class="negative">{{ (transitCo2Difference * -1).toFixed(2) }}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
-        <p *ngIf="transitPriceDifference < 0">and raise the price by approx. <span class="negative">{{(transitPriceDifference * -1).toFixed(2)}}CHF</span>.</p>
+        <p *ngIf="transitPriceDifference < 0">and raise the price by approx. <span class="negative">CHF {{(transitPriceDifference * -1).toFixed(2)}}</span>.</p>
         <p>Therefore, you could consider an alternative.</p>
       </div>
       <div class="transit-recommendation" *ngIf="!timeDifferenceTooBig">
@@ -40,30 +40,31 @@
         <p *ngIf="transitTimeDifference > 0">It might delay your arrival by approx. <span class="negative">{{ transitTimeDifferenceText }}</span>, however...</p>
         <p *ngIf="transitTimeDifference <= 0">It will save you approx. <span class="positive">{{ transitTimeDifferenceText.substring(1) }}</span>.</p>
         <p>It will also decrease your CO2 Emissions by <span class="positive">{{(transitCo2Difference * -1).toFixed(2)}}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
-        <p *ngIf="transitPriceDifference < 0">and save you approx. <span class="positive">{{ (transitPriceDifference * -1).toFixed(2) }}CHF</span>.</p>
-        <p *ngIf="drivingStatistics!.distance <= 5000">Or even better, since your journey is only <span class="positive">{{(drivingStatistics!.distance / 1000).toFixed(1)}}km</span>
+        <p *ngIf="transitPriceDifference < 0">and save you approx. <span class="positive">CHF {{ (transitPriceDifference * -1).toFixed(2) }}</span>.</p>
+        <p *ngIf="drivingStatistics!.distance <= 5000">Or even better, since your journey is only <span class="positive">{{(drivingStatistics!.distance / 1000).toFixed(1)}} km</span>
           , you could even consider taking a <span class="positive">Bike</span>. This would reduce both the CO2 Emissions and the cost by <span class="positive">100%</span>!</p>
       </div>
     </div>
     <div class="bike" *ngIf="cyclingStatistics">
       <p class="overview-title"><strong>Alternative: <span class="positive">Biking</span></strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{cyclingStatistics?.durationMinutes!.text}}</p>
-      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: <span class="positive">{{cyclingStatistics?.kgCo2}}kg</span></p>
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: <span class="positive">{{cyclingStatistics?.kgCo2}} kg</span></p>
       <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: <span class="positive">{{cyclingStatistics!.price!.toFixed()}}CHF</span></p>
     </div>
     <div class="car">
       <p class="overview-title"><strong>Car Route</strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes!.text}}</p>
-      <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emissions: {{drivingStatistics?.kgCo2}}kg</p>
-      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{drivingStatistics!.price!.toFixed()}}CHF</p>
+      <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emissions: {{drivingStatistics?.kgCo2}} kg</p>
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: CHF {{drivingStatistics!.price!.toFixed()}}
+      </p>
     </div>
     <div class="transit">
       <p class="overview-title"><strong>Public Transport Route</strong></p>
       <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{transitStatistics?.durationMinutes!.text}}
         <span [ngClass]="{'positive': transitTimeDifference < 0, 'neutral': transitTimeDifference === 0, 'negative': transitTimeDifference > 0}">{{transitTimeDifference >= 0 ? '+' : ''}}{{ transitTimeDifferenceText }}</span></p>
-      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: {{transitStatistics?.kgCo2}}kg
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: {{transitStatistics?.kgCo2}} kg
         <span [ngClass]="{'positive': transitCo2Difference < 0, 'neutral': transitCo2Difference === 0, 'negative': transitCo2Difference > 0}">{{transitCo2Difference > 0 ? '+' : ''}}{{ transitCo2Difference.toFixed(0) }}%</span></p>
-      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{transitStatistics!.price!.toFixed(2)}}CHF
+      <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: CHF {{transitStatistics!.price!.toFixed(2)}}
         <span [ngClass]="{'positive': transitPriceDifference < 0, 'neutral': transitPriceDifference === 0, 'negative': transitPriceDifference > 0}">{{transitPriceDifference > 0 ? '+' : ''}}{{ transitPriceDifference.toFixed(2) }}CHF</span></p>
     </div>
   </div>

@@ -97,14 +97,19 @@ export class HomeComponent implements AfterViewInit, OnInit {
               travelMode: mode,
               transitOptions: {
                 departureTime: new Date(datetime)
-              }
+              },
+              provideRouteAlternatives: true
             }
             this.directionsService!.route(request, async (response, status) => {
               if (response!.routes[0]!.legs[0]!.distance!.value <= 5000 && mode === TravelMode.DRIVING) {
                 await this.createCyclingOption()
               }
               if (status === DirectionsStatus.OK && response) {
-                const leg = response.routes[0].legs[0];
+                // choose the quickest out of the available routes
+                const leg = response.routes.reduce(function(prev, curr) {
+                  return prev.legs[0].duration!.value < curr.legs[0].duration!.value ? prev : curr;
+                }).legs[0];
+
                 if (mode === TravelMode.DRIVING) {
                   this.priceCar = Math.round((leg.distance!.value / 1000) * 0.8)
                   this.drivingDirectionsRenderer?.setDirections(response)
@@ -116,7 +121,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
                     kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100) / 100,
                     distance: leg.distance!.value
                   }
-                } else {
+                } else { // Transit
+
                   this.transitDirectionsRenderer?.setDirections(response);
                   this.transitStatistics = {
                     durationMinutes: leg.duration!,
