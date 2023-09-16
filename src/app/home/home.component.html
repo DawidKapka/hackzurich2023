@@ -1,2 +1,9 @@
-<div class="trip-input"></div>
+<div class="trip-input">
+  <form>
+    <input [(ngModel)]="pointA" name="pointA">
+    <input [(ngModel)]="pointB" name="pointB">
+    <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" type="datetime-local">
+    <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal ?? '')">Check Connections</button>
+  </form>
+</div>
 <div #googleMaps id="map"></div>

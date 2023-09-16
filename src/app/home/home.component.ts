@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import DirectionsStatus = google.maps.DirectionsStatus;
+import {format} from "date-fns";
 
 @Component({
   selector: 'app-home',
@@ -8,8 +9,12 @@ import DirectionsStatus = google.maps.DirectionsStatus;
 })
 export class HomeComponent implements AfterViewInit{
 
+  public pointA: string | undefined;
+  public pointB: string | undefined;
+  public dateTimeLocal: string = format(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
   private map: google.maps.Map | undefined;
   private position: GeolocationPosition | undefined;
+  private directionsService: google.maps.DirectionsService | undefined;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
@@ -42,28 +47,25 @@ export class HomeComponent implements AfterViewInit{
   }
 
   private initDirections() {
-    const directionsService: google.maps.DirectionsService = new google.maps.DirectionsService()
+    this.directionsService = new google.maps.DirectionsService()
     const directionsRenderer: google.maps.DirectionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(this.map!)
-    this.calculateRoute(directionsService).then(route => {
-      console.log(route);
-      if (route) {
-        directionsRenderer.setDirections(route)
-      }
-    });
   }
 
-  private calculateRoute(directionsService: google.maps.DirectionsService) {
+  public calculateRoute(pointA: string, pointB: string, datetime: string) {
+    console.log(pointA);
+    console.log(pointB);
+    console.log(datetime);
     return new Promise<google.maps.DirectionsResult | null>((resolve) => {
       const request: google.maps.DirectionsRequest = {
-        origin: new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude),
-        destination: 'Luzern',
+        origin: pointA,
+        destination: pointB,
         travelMode: google.maps.TravelMode.TRANSIT,
         transitOptions: {
-          departureTime: new Date('2023-09-16T03:00:00')
+          departureTime: new Date(datetime)
         }
       }
-      directionsService.route(request, (response, status) => {
+      this.directionsService!.route(request, (response, status) => {
         if (status === DirectionsStatus.OK) {
           resolve(response)
         }
