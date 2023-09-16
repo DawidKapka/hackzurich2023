@@ -28,6 +28,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   private directionsService: google.maps.DirectionsService | undefined;
   private drivingDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
   private transitDirectionsRenderer: google.maps.DirectionsRenderer | undefined;
+  private priceCar = 0;
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
@@ -86,7 +87,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   public calculateRoute(pointA: string, pointB: string, datetime: string) {
     if (this.validatePoints()) {
-      [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
+      // Order is important because the pricing of Transit is calculated with the car pricing.
+      [TravelMode.DRIVING, TravelMode.TRANSIT].forEach((mode) => {
         const request: google.maps.DirectionsRequest = {
           origin: pointA === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointA,
           destination: pointB === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointB,
@@ -99,19 +101,20 @@ export class HomeComponent implements AfterViewInit, OnInit {
           if (status === DirectionsStatus.OK && response) {
             const leg = response.routes[0].legs[0];
             if (mode === TravelMode.DRIVING) {
+              this.priceCar = Math.round((leg.distance!.value / 1000) * 0.8)
               this.drivingDirectionsRenderer?.setDirections(response)
               this.from = response.routes[0].legs[0].start_address
               this.to = response.routes[0].legs[0].end_address
               this.carStatistics = {
                 durationMinutes: leg.duration!.text,
-                price: Math.round((leg.distance!.value / 1000) * 0.8),
+                price: this.priceCar,
                 kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100 ) / 100
               }
             } else {
               this.transitDirectionsRenderer?.setDirections(response);
               this.transitStatistics = {
                 durationMinutes: leg.duration!.text,
-                price: -1,
+                price: Math.round((this.priceCar > 10 ? this.priceCar * 0.8 : 5.40)*100)/100,
                 kgCo2: Math.round((leg.distance!.value / 1000) * 0.024 * 100) / 100
               }
             }
