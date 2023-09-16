@@ -21,7 +21,7 @@ export class RouteSummaryComponent implements AfterViewInit{
   }
 
   private createTransitToDrivingDifference() {
-    this.transitCo2Difference = this.transitStatistics!.kgCo2 - this.drivingStatistics!.kgCo2
+    this.transitCo2Difference = (100 - ((100 / this.drivingStatistics!.kgCo2) * this.transitStatistics!.kgCo2)) * -1
     this.transitPriceDifference = this.transitStatistics!.price - this.drivingStatistics!.price
   }
 }
