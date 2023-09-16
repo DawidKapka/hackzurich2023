@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {ThumbsDown, ArrowLeft, ArrowRight, Clock, DollarSign, Smile, Frown} from "angular-feather/icons";
+import {ThumbsDown, ArrowLeft, ArrowRight, Clock, DollarSign, Smile, Frown, Crosshair, X} from "angular-feather/icons";
 import {FeatherModule} from "angular-feather";
 
 const icons = {
@@ -9,7 +9,9 @@ const icons = {
   Clock,
   DollarSign,
   Smile,
-  Frown
+  Frown,
+  Crosshair,
+  X
 };
 
 @NgModule({

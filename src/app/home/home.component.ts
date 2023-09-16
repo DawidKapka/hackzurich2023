@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {format} from "date-fns";
+import {format, intervalToDuration} from "date-fns";
 import {Statistics} from "../statistics";
 import DirectionsStatus = google.maps.DirectionsStatus;
 import TravelMode = google.maps.TravelMode;
@@ -21,6 +21,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   public dropdownHidden: boolean = false;
   public from: string = ''
   public to: string = ''
+  public originIsCurrent: boolean = true;
+  public destinationIsCurrent: boolean = false;
   private map: google.maps.Map | undefined;
   private position: GeolocationPosition | undefined;
   private directionsService: google.maps.DirectionsService | undefined;
@@ -83,37 +85,68 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   public calculateRoute(pointA: string, pointB: string, datetime: string) {
-    [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
-      const request: google.maps.DirectionsRequest = {
-        origin: pointA,
-        destination: pointB,
-        travelMode: mode,
-        transitOptions: {
-          departureTime: new Date(datetime)
-        }
-      }
-      this.directionsService!.route(request, (response, status) => {
-        if (status === DirectionsStatus.OK && response) {
-          const leg = response.routes[0].legs[0];
-          if (mode === TravelMode.DRIVING) {
-            this.drivingDirectionsRenderer?.setDirections(response)
-            this.carStatistics = {
-              durationMinutes: leg.duration!.text,
-              price: Math.round((leg.distance!.value / 1000) * 0.8),
-              kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100 ) / 100
-            }
-          } else {
-            this.transitDirectionsRenderer?.setDirections(response);
-            this.transitStatistics = {
-              durationMinutes: leg.duration!.text,
-              price: -1,
-              kgCo2: Math.round((leg.distance!.value / 1000) * 0.024 * 100) / 100
-            }
+    if (this.validatePoints()) {
+      [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
+        const request: google.maps.DirectionsRequest = {
+          origin: pointA,
+          destination: pointB,
+          travelMode: mode,
+          transitOptions: {
+            departureTime: new Date(datetime)
           }
-          this.state = 'ROUTE_FOUND'
-          this.dropdownHidden = true;
         }
+        this.directionsService!.route(request, (response, status) => {
+          if (status === DirectionsStatus.OK && response) {
+            const leg = response.routes[0].legs[0];
+            if (mode === TravelMode.DRIVING) {
+              this.drivingDirectionsRenderer?.setDirections(response)
+              this.carStatistics = {
+                durationMinutes: leg.duration!.text,
+                price: Math.round((leg.distance!.value / 1000) * 0.8),
+                kgCo2: Math.round((leg.distance!.value / 1000) * 0.167 * 100 ) / 100
+              }
+            } else {
+              this.transitDirectionsRenderer?.setDirections(response);
+              this.transitStatistics = {
+                durationMinutes: leg.duration!.text,
+                price: -1,
+                kgCo2: Math.round((leg.distance!.value / 1000) * 0.024 * 100) / 100
+              }
+            }
+            this.state = 'ROUTE_FOUND'
+            this.dropdownHidden = true;
+          }
+        })
       })
-    })
+    }
+  }
+
+  private validatePoints() {
+    return this.pointA !== '' && this.pointB !== ''
+  }
+
+  goBack() {
+    this.state = 'NO_ROUTE';
+    this.dropdownHidden = false;
+  }
+
+  setOriginToCurrent() {
+    this.pointA = 'Current Location'
+    this.originIsCurrent = true;
+  }
+
+  setDestinationToCurrent() {
+    this.pointB = 'Current Location'
+    this.destinationIsCurrent = true;
+  }
+
+  resetOrigin() {
+    this.pointA = ''
+    this.originIsCurrent = false
+  }
+
+  resetDestination() {
+    this.pointB = ''
+    this.destinationIsCurrent = false
   }
 }

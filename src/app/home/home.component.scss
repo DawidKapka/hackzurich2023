@@ -1,6 +1,6 @@
 #map {
   width: 100vw;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 200px - 2em);
   background: lightgray;
 }
 
@@ -12,13 +12,34 @@
 
 .trip-input {
   width: 100vw;
-  height: 200px;
+  height: calc(200px + 2em);
   animation: appear 200ms;
   animation-fill-mode: forwards;
+  border-radius: 0 0 12px 12px;
+
+  .from, .to {
+    display: flex;
+
+    .icon {
+      height: 50px;
+      width: auto;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+
+      .crosshair {
+        margin: 0 12px 0 12px;
+      }
+    }
+  }
 
   .input, .button {
     margin: 0;
     width: 100%;
+  }
+
+  .button {
+    margin: 1em 0;
   }
 
   .show {
@@ -66,6 +87,31 @@
     width: 100vw;
     text-align: center;
     transform: translateY(-44px);
+  }
+}
+
+.back {
+  position: absolute;
+  background-color: var(--card-background-color);
+  height: 32px;
+  width: 32px;
+  top: 1em;
+  left: 1em;
+  z-index: 999;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 4px;
+  box-shadow: 2px 2px 2px rgba(0,0,0,.5);
+
+  &:hover {
+    background-color: var(--card-border-color);
+  }
+
+  .icon {
+    height: 24px;
+    width: 24px;
+    transform: translateY(-2px);
   }
 }
 
