@@ -1,13 +1,15 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {format, intervalToDuration} from "date-fns";
+import {Statistics} from "../statistics";
 import DirectionsStatus = google.maps.DirectionsStatus;
-import {format} from "date-fns";
+import TravelMode = google.maps.TravelMode;
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit{
+export class HomeComponent implements AfterViewInit {
 
   public pointA: string | undefined;
   public pointB: string | undefined;
@@ -17,6 +19,8 @@ export class HomeComponent implements AfterViewInit{
   private position: GeolocationPosition | undefined;
   private directionsService: google.maps.DirectionsService | undefined;
   private directionsRenderer: google.maps.DirectionsRenderer | undefined;
+  public transitStatistics: Statistics | undefined
+  public carStatistics: Statistics | undefined
 
   @ViewChild('googleMaps') googleMaps: ElementRef | undefined;
 
@@ -43,7 +47,7 @@ export class HomeComponent implements AfterViewInit{
           disableDefaultUI: true
         }
         this.map = new google.maps.Map(this.googleMaps!.nativeElement, mapOptions);
-        const positionMarker: google.maps.Marker = new google.maps.Marker({ position: coordinates, map: this.map})
+        const positionMarker: google.maps.Marker = new google.maps.Marker({position: coordinates, map: this.map})
         positionMarker.setMap(this.map)
         resolve()
       })
@@ -57,18 +61,36 @@ export class HomeComponent implements AfterViewInit{
   }
 
   public calculateRoute(pointA: string, pointB: string, datetime: string) {
-    const request: google.maps.DirectionsRequest = {
+    [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
+      const request: google.maps.DirectionsRequest = {
         origin: pointA,
         destination: pointB,
-        travelMode: google.maps.TravelMode.TRANSIT,
+        travelMode: mode,
         transitOptions: {
           departureTime: new Date(datetime)
         }
-    }
-    this.directionsService!.route(request, (response, status) => {
-      if (status === DirectionsStatus.OK && response) {
-        this.directionsRenderer?.setDirections(response)
       }
+      this.directionsService!.route(request, (response, status) => {
+        if (status === DirectionsStatus.OK && response) {
+          const stats = this.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
+          mode === TravelMode.TRANSIT ? this.transitStatistics = stats : this.carStatistics = stats;
+          this.directionsRenderer?.setDirections(response)
+          //TODO; https://github.com/explooosion/Agm-Direction/issues/46 cant just call renderer twice
+        }
+      })
     })
+  }
+
+  private calculateStatistics(depDate: Date, arrDate: Date,): Statistics {
+    return {
+      durationMinutes: intervalToDuration(
+        {
+          start: depDate,
+          end: arrDate
+        }
+      ).minutes!,
+      kgCo2: 0,
+      price: 0
+    }
   }
 }

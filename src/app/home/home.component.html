@@ -4,9 +4,9 @@
 <div class="content">
   <div class="trip-input">
     <form>
-      <input type="text" [(ngModel)]="pointA" class="input">
-      <input [(ngModel)]="pointB" class="input">
-      <input [(ngModel)]="dateTimeLocal" class="input" type="datetime-local">
+      <input type="text" [(ngModel)]="pointA" class="input" name="pointA">
+      <input [(ngModel)]="pointB" class="input" name="pointB">
+      <input [(ngModel)]="dateTimeLocal" class="input" type="datetime-local" name="dateTimeLocal">
       <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal ?? '')">Check Connections</button>
     </form>
   </div>
