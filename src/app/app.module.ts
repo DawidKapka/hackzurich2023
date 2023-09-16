@@ -7,11 +7,13 @@ import {GoogleMapsModule} from "@angular/google-maps";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { HomeComponent } from './home/home.component';
+import { RouteSummaryComponent } from './route-summary/route-summary.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    RouteSummaryComponent
   ],
   imports: [
     BrowserModule,

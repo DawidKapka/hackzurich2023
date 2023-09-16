@@ -9,12 +9,8 @@
       <input [(ngModel)]="pointB" name="pointB" class="input">
       <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" class="input" type="datetime-local">
       <button (click)="calculateRoute(pointA ?? '', pointB ?? '', dateTimeLocal)" class="button">Check Connections</button>
-      <div class="show" *ngIf="state === 'ROUTE_FOUND'">
-        <div class="show-inner" (click)="toggleDropdownHidden()">
-          <p class="show-inner-text">{{ dropdownHidden ? 'Show menu' : 'Hide menu' }}</p>
-        </div>
-      </div>
     </form>
   </div>
-  <div #googleMaps id="map" [ngClass]="{'map-full': dropdownHidden}"></div>
+  <div #googleMaps id="map" [ngClass]="{'map-full': state === 'ROUTE_FOUND'}"></div>
+  <app-route-summary *ngIf="state === 'ROUTE_FOUND'" [from]="from" [to]="to" [drivingStatistics]="carStatistics" [transitStatistics]="transitStatistics"></app-route-summary>
 </div>

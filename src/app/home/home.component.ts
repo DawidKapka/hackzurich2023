@@ -19,6 +19,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   public carStatistics: Statistics | undefined
   public state: 'NO_ROUTE' | 'ROUTE_FOUND' = 'NO_ROUTE'
   public dropdownHidden: boolean = false;
+  public from: string = ''
+  public to: string = ''
   private map: google.maps.Map | undefined;
   private position: GeolocationPosition | undefined;
   private directionsService: google.maps.DirectionsService | undefined;
@@ -96,11 +98,13 @@ export class HomeComponent implements AfterViewInit, OnInit {
             this.drivingDirectionsRenderer?.setDirections(response)
             const startDate = new Date(Date.now())
             const endDate = new Date(Date.now())
+            this.from = response.routes[0].legs[0].start_address
+            this.to = response.routes[0].legs[0].end_address
             endDate.setMinutes(endDate.getMinutes() + response.routes[0].legs[0].duration!.value)
-            this.carStatistics = this.calculateStatistics(startDate, endDate)
+            this.carStatistics = HomeComponent.calculateStatistics(startDate, endDate)
           } else {
             this.transitDirectionsRenderer?.setDirections(response);
-            this.transitStatistics = this.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
+            this.transitStatistics = HomeComponent.calculateStatistics(response.routes[0].legs[0].departure_time!.value, response.routes[0].legs[0].arrival_time!.value)
           }
           this.state = 'ROUTE_FOUND'
           this.dropdownHidden = true;
@@ -109,7 +113,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     })
   }
 
-  private calculateStatistics(depDate: Date, arrDate: Date,): Statistics {
+  private static calculateStatistics(depDate: Date, arrDate: Date): Statistics {
     return {
       durationMinutes: intervalToDuration(
         {
@@ -120,9 +124,5 @@ export class HomeComponent implements AfterViewInit, OnInit {
       kgCo2: 0,
       price: 0
     }
-  }
-
-  toggleDropdownHidden() {
-    this.dropdownHidden = !this.dropdownHidden
   }
 }

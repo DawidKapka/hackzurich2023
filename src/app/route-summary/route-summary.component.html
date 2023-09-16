@@ -1,0 +1,17 @@
+<div class="summary">
+  <div class="header">
+    <h5 class="header-title">{{from}} - {{to}}</h5>
+  </div>
+  <div class="car">
+    <p><strong>Car Route</strong></p>
+    <p>Duration: {{drivingStatistics?.durationMinutes}} min</p>
+    <p>CO2 Emission: {{drivingStatistics?.kgCo2}}kg</p>
+    <p>Estimated Cost: {{drivingStatistics?.price}}CHF</p>
+  </div>
+  <div class="transit">
+    <p><strong>Public Transport Route</strong></p>
+    <p>Duration: {{transitStatistics?.durationMinutes}} min</p>
+    <p>CO2 Emission: {{transitStatistics?.kgCo2}}kg</p>
+    <p>Estimated Cost: {{transitStatistics?.price}}CHF</p>
+  </div>
+</div>
