@@ -1,5 +1,8 @@
 <div class="summary">
-  <div class="header">
+  <div class="loading" *ngIf="loading">
+    <article aria-busy></article>
+  </div>
+  <div class="header" *ngIf="!loading">
     <div class="header-from">
       <div class="from">
         <div class="text">
@@ -23,17 +26,34 @@
       </div>
     </div>
   </div>
-  <div class="overview-wrapper">
+  <div class="overview-wrapper" *ngIf="!loading">
+    <div class="recommendation">
+      <h4>Recommendation: <span [ngClass]="{'positive': !timeDifferenceTooBig, 'negative': timeDifferenceTooBig}">{{ timeDifferenceTooBig ? 'Car' : 'Public Transport'}}</span></h4>
+      <div class="car-recommendation" *ngIf="timeDifferenceTooBig">
+        <p>Taking a car for this journey might be more efficient, it will save you <span class="positive">{{transitTimeDifferenceText}}</span>.</p>
+        <p>However, keep in mind that it will increase your CO2 Emissions by <span class="negative">{{ (transitCo2Difference * -1).toFixed(2) }}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
+        <p *ngIf="transitPriceDifference < 0">and raise the price by approx. <span class="negative">{{(transitPriceDifference * -1).toFixed(2)}}CHF</span>.</p>
+        <p>Therefore, you could consider an alternative.</p>
+      </div>
+      <div class="transit-recommendation" *ngIf="!timeDifferenceTooBig">
+        <p>Consider taking Public Transport for this journey.</p>
+        <p *ngIf="transitTimeDifference > 0">It might delay your arrival by approx. <span class="negative">{{ transitTimeDifferenceText }}</span>, however...</p>
+        <p *ngIf="transitTimeDifference <= 0">It will save you approx. <span class="positive">{{ transitTimeDifferenceText.substring(1) }}</span>.</p>
+        <p>It will also decrease your CO2 Emissions by <span class="positive">{{(transitCo2Difference * -1).toFixed(2)}}%</span>{{ transitPriceDifference < 0 ? '' : '.'}}</p>
+        <p *ngIf="transitPriceDifference < 0">and save you approx. <span class="positive">{{ (transitPriceDifference * -1).toFixed(2) }}CHF</span>.</p>
+      </div>
+    </div>
     <div class="car">
       <p class="overview-title"><strong>Car Route</strong></p>
-      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes}}</p>
-      <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emission: {{drivingStatistics?.kgCo2}}kg</p>
+      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{drivingStatistics?.durationMinutes!.text}}</p>
+      <p class="overview"><i-feather name="frown" class="small-icon"></i-feather>CO2 Emissions: {{drivingStatistics?.kgCo2}}kg</p>
       <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{drivingStatistics!.price!.toFixed()}}CHF</p>
     </div>
     <div class="transit">
       <p class="overview-title"><strong>Public Transport Route</strong></p>
-      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{transitStatistics?.durationMinutes}}</p>
-      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emission: {{transitStatistics?.kgCo2}}kg
+      <p class="overview"><i-feather name="clock" class="small-icon"></i-feather>Duration: {{transitStatistics?.durationMinutes!.text}}
+        <span [ngClass]="{'positive': transitTimeDifference < 0, 'neutral': transitTimeDifference === 0, 'negative': transitTimeDifference > 0}">{{transitTimeDifference >= 0 ? '+' : ''}}{{ transitTimeDifferenceText }}</span></p>
+      <p class="overview"><i-feather name="smile" class="small-icon"></i-feather>CO2 Emissions: {{transitStatistics?.kgCo2}}kg
         <span [ngClass]="{'positive': transitCo2Difference < 0, 'neutral': transitCo2Difference === 0, 'negative': transitCo2Difference > 0}">{{transitCo2Difference > 0 ? '+' : ''}}{{ transitCo2Difference.toFixed(0) }}%</span></p>
       <p class="overview"><i-feather name="dollar-sign" class="small-icon"></i-feather>Estimated Cost: {{transitStatistics!.price!.toFixed(2)}}CHF
         <span [ngClass]="{'positive': transitPriceDifference < 0, 'neutral': transitPriceDifference === 0, 'negative': transitPriceDifference > 0}">{{transitPriceDifference > 0 ? '+' : ''}}{{ transitPriceDifference.toFixed(2) }}CHF</span></p>

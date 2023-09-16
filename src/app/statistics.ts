@@ -1,5 +1,9 @@
 export interface Statistics {
   price: number;
   kgCo2: number;
-  durationMinutes: string;
+  durationMinutes: {
+    text: string,
+    value: number
+  },
+  distance: number
 }
