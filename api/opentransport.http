@@ -1,0 +1,2 @@
+GET http://transport.opendata.ch/v1/connections?from=Luzern&to=Oerlikon&date=2023-09-16&time=08:00
+

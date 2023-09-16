@@ -107,5 +107,8 @@
       }
     }
   },
-  "defaultProject": "hackzurich2023"
+  "defaultProject": "hackzurich2023",
+  "cli": {
+    "analytics": false
+  }
 }

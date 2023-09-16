@@ -1,1 +1,15 @@
+<form>
+  <input [(ngModel)]="pointA" name="pointA">
+  <input [(ngModel)]="pointB" name="pointB">
+  <input [(ngModel)]="dateTimeLocal" name="dateTimeLocal" type="datetime-local">
+  <button (click)="getConnections(pointA, pointB, dateTimeLocal)">Check Connections</button>
+
+</form>
+
+
+
 <div #googleMaps id="map"></div>
+
+
+
+
