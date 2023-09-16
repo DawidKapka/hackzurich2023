@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {format, intervalToDuration} from "date-fns";
+import {format} from "date-fns";
 import {Statistics} from "../statistics";
 import DirectionsStatus = google.maps.DirectionsStatus;
 import TravelMode = google.maps.TravelMode;
@@ -11,7 +11,7 @@ import TravelMode = google.maps.TravelMode;
 })
 export class HomeComponent implements AfterViewInit, OnInit {
 
-  public pointA: string | undefined;
+  public pointA: string | undefined = 'Current Location';
   public pointB: string | undefined;
   public dateTimeLocal: string = format(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
   public loading: boolean = false
@@ -88,8 +88,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
     if (this.validatePoints()) {
       [TravelMode.TRANSIT, TravelMode.DRIVING].forEach((mode) => {
         const request: google.maps.DirectionsRequest = {
-          origin: pointA,
-          destination: pointB,
+          origin: pointA === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointA,
+          destination: pointB === 'Current Location' ? new google.maps.LatLng(this.position!.coords.latitude, this.position!.coords.longitude) : pointB,
           travelMode: mode,
           transitOptions: {
             departureTime: new Date(datetime)
@@ -100,6 +100,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
             const leg = response.routes[0].legs[0];
             if (mode === TravelMode.DRIVING) {
               this.drivingDirectionsRenderer?.setDirections(response)
+              this.from = response.routes[0].legs[0].start_address
+              this.to = response.routes[0].legs[0].end_address
               this.carStatistics = {
                 durationMinutes: leg.duration!.text,
                 price: Math.round((leg.distance!.value / 1000) * 0.8),
